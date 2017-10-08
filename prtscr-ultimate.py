@@ -14,6 +14,7 @@ BACKEND='gnome-screenshot'
 
 from random import choice
 from time import strftime
+from time import sleep
 from os import remove
 import subprocess
 import argparse
@@ -29,6 +30,7 @@ group_global.add_argument("-f", "--fullscreen", help="grab the entire screen", a
 group_global.add_argument("-w", "--window", help="grab only active window", action="store_true")
 parser.add_argument("-b", "--borders", help="include window borders, works only with --window", action="store_true")
 parser.add_argument("-c", "--cursor", help="include mouse cursor", action="store_true")
+parser.add_argument("-d", "--delay", help="set delay before screenshot", type=int, default=0)
 parser.add_argument("--backend", help="select backend for action, overrides in-file variable", type=str, choices=['gnome-screenshot', 'scrot'], default=BACKEND)
 parser.add_argument("--debug", help="don't use this option", action="store_true", default=False)
 options = parser.parse_args()
@@ -78,6 +80,13 @@ if options.backend == 'scrot':
         command.append('--border')
     if options.window:
         command.append('--focused')
+
+'''
+    Delay if --dealy is set
+'''
+if options.delay > 0:
+    print('Delay set to', options.delay, 'seconds')
+    sleep(options.delay)
 
 '''
     Use backend with prepared params
