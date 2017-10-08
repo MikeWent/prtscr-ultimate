@@ -2,11 +2,11 @@
 
 '''
     Available backends:
+    - gnome-screenshot (recommended)
     - scrot
-    - gnome-screenshot (recommended due to stability)
-
+    
     Unsupported backends:
-    - xfce4-screenshooter (doesn't have saving to file option, only to folder)
+    - xfce4-screenshooter
 
     Can be overrided with --backend option
 '''
