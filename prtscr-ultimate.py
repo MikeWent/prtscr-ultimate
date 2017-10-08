@@ -46,7 +46,7 @@ def random_symbols(length=10):
 def rm(filename):
     try:
         remove(filename)
-    except:
+    except FileNotFoundError:
         pass
 
 '''
