@@ -26,7 +26,7 @@ optional arguments:
 ## Available backends
 
 - gnome-screenshot (recommended)
-- spectacle
+- spectacle (package `kde-spectacle`)
 - scrot
 
 ## Installation

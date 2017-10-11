@@ -8,7 +8,7 @@
     Available backends:
     - gnome-screenshot (recommended)
     - scrot
-    - spectacle (kde-spectacle)
+    - spectacle (package `kde-spectacle`)
 
     Unsupported backends:
     - xfce4-screenshooter
