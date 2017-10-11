@@ -1,5 +1,9 @@
 #!/usr/bin/env python3
 
+# PrtScr Ultimate
+# https://github.com/MikeWent/prtscr-ultimate
+
+
 '''
     Available backends:
     - gnome-screenshot (recommended)
@@ -38,7 +42,6 @@ options = parser.parse_args()
 '''
     Functions and abstractions
 '''
-
 def random_symbols(length=10):
     alphabet = string.ascii_letters + string.digits
     return ''.join([choice(alphabet) for _ in range(length)])
@@ -94,10 +97,10 @@ if options.delay > 0:
 temp_filename = random_symbols() + '.png'
 command.append(temp_filename)
 if options.debug:
-    code = subprocess.run(command).returncode
+    subprocess.run(command)
 else:
     # mute output
-    code = subprocess.run(command, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL).returncode
+    subprocess.run(command, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
 if options.debug:
     print('Debug:', command)
@@ -107,11 +110,16 @@ if options.debug:
     Copy file to clipboard and delete it
 '''
 xclip_command = ['xclip', '-selection', 'clipboard', '-t', 'image/png', '-i', temp_filename]
-code = subprocess.run(xclip_command).returncode
+subprocess.run(xclip_command)
 if options.debug:
     print('Debug:', xclip_command)
     print('Debug:', 'xclip exit code', code)
 
-code = subprocess.run(['rm', temp_filename]).returncode
+'''
+    Remove temp file
+'''
+rm_command = ['rm', temp_filename]
+subprocess.run(rm_command)
 if options.debug:
+    print('Debug:', rm_command)
     print('Debug:', 'rm exit code', code)
