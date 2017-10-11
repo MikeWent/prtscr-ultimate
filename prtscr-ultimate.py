@@ -8,7 +8,7 @@
     Available backends:
     - gnome-screenshot (recommended)
     - scrot
-    
+
     Unsupported backends:
     - xfce4-screenshooter
 
@@ -17,7 +17,6 @@
 BACKEND='gnome-screenshot'
 
 from random import choice
-from time import strftime
 from time import sleep
 from os import remove
 import subprocess
@@ -104,7 +103,6 @@ else:
 
 if options.debug:
     print('Debug:', command)
-    print('Debug:', 'backend exit code', code)
 
 '''
     Copy file to clipboard and delete it
@@ -113,7 +111,6 @@ xclip_command = ['xclip', '-selection', 'clipboard', '-t', 'image/png', '-i', te
 subprocess.run(xclip_command)
 if options.debug:
     print('Debug:', xclip_command)
-    print('Debug:', 'xclip exit code', code)
 
 '''
     Remove temp file
@@ -122,4 +119,3 @@ rm_command = ['rm', temp_filename]
 subprocess.run(rm_command)
 if options.debug:
     print('Debug:', rm_command)
-    print('Debug:', 'rm exit code', code)
