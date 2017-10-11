@@ -1,6 +1,8 @@
 # PrtScr Ultimate
 
-Script that can connect screenshot tools to xclip.
+Lightweight python script that provides single command line interface for different screenshot tools.
+
+It makes screenshot, copies it to clipboard and deletes temporary screenshot file. Works everywhere, on any DE and even without it (for example on i3).
 
 ## Usage
 
@@ -25,7 +27,7 @@ optional arguments:
 
 ## Available backends
 
-- gnome-screenshot (recommended)
+- gnome-screenshot (**recommended**)
 - spectacle (package `kde-spectacle`)
 - scrot
 
@@ -36,7 +38,7 @@ optional arguments:
 `<backend>` is one of the available backends
 
 ```sh
-sudo apt install git xclip <backend>
+sudo apt install git python3 xclip <backend>
 ```
 
 ### Clone repo
