@@ -87,8 +87,12 @@ if options.backend == 'scrot':
     Delay if --dealy is set
 '''
 if options.delay > 0:
-    print('Delay set to', options.delay, 'seconds')
-    sleep(options.delay)
+    n = options.delay
+    while n > 0:
+        print('Screenshot in ' + str(n) + ' seconds', end='\r')
+        sleep(1)
+        n -= 1
+    print('\033[K' + ' '*20) # clear line
 
 '''
     Use backend with prepared params
