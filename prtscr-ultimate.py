@@ -19,7 +19,7 @@ BACKEND='gnome-screenshot'
 
 from random import choice
 from time import sleep
-from os import remove
+from os import remove, path
 import subprocess
 import argparse
 import string
@@ -128,8 +128,13 @@ if options.debug:
     print('Debug:', command)
 
 '''
-    Copy file to clipboard and delete it
+    Copy file to clipboard
 '''
+# check if exists
+if not path.exists(temp_filename):
+    print('No screenshot taken.')
+    exit(1)
+
 xclip_command = ['xclip', '-selection', 'clipboard', '-t', 'image/png', '-i', temp_filename]
 subprocess.run(xclip_command)
 if options.debug:
