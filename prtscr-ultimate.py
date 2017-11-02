@@ -118,14 +118,30 @@ if options.delay > 0:
 '''
 temp_filename = random_symbols() + '.png'
 command.append(temp_filename)
-if options.debug:
-    subprocess.run(command)
-else:
-    # mute output
-    subprocess.run(command, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
 if options.debug:
     print('Debug:', command)
+
+if options.debug:
+    # don't mute output,
+    # don't handle exceptions
+    # don't show help messages
+    subprocess.run(command)
+else:
+    try:
+        # mute output and run
+        subprocess.run(command, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    except FileNotFoundError:
+        print('Backend "'+options.backend+'" is not installed. What you can do:')
+        print('    - install it')
+        print('    - change backend by editing BACKEND var in this script')
+        print('    - temporary change backend with --backend option')
+        exit(1)
+    except AttributeError:
+        # when using python3.4 subprocess.run raises
+        # "AttributeError: module object has no attribute run"
+        print('Installed Python is old, upgrade it to version 3.5')
+        exit(1)
 
 '''
     Copy file to clipboard
