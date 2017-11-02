@@ -152,10 +152,18 @@ if not path.exists(temp_filename):
     exit(1)
 
 xclip_command = ['xclip', '-selection', 'clipboard', '-t', 'image/png', '-i', temp_filename]
-subprocess.run(xclip_command)
 if options.debug:
     print('Debug:', xclip_command)
 
+try:
+    subprocess.run(xclip_command)
+except FileNotFoundError:
+    print('Unable to copy screenshot to clipboard: "xclip" is not installed.')
+    yn = input('Delete temporary screenshot file? [Y/n]: ')
+    if not yn in ('', 'y'):
+        print('File name is', temp_filename)
+        exit()
+        
 '''
     Remove temp file
 '''
