@@ -68,4 +68,4 @@ BACKEND='gnome-screenshot'
 
 ## License
 
-GPLv3
+MIT
