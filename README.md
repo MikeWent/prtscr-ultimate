@@ -2,12 +2,12 @@
 
 Lightweight python script that provides single command line interface for different screenshot tools.
 
-It makes screenshot, copies it to clipboard and deletes temporary screenshot file. Works everywhere, on any DE and even without it (for example on i3).
+It makes screenshot, copies it to clipboard and deletes temporary screenshot file (optionally can save screenshot to file). Works everywhere, with any DE and even without it (for example with i3).
 
 ## Usage
 
 ```
-usage: prtscr-ultimate.py [-h] [-s | -f | -w] [-b] [-c] [-d DELAY]
+usage: prtscr-ultimate.py [-h] [-s | -f | -w] [-b] [-c] [-d DELAY] [-o FILE]
                           [--backend {gnome-screenshot,scrot,spectacle}]
                           [--debug]
 
@@ -20,15 +20,21 @@ optional arguments:
   -c, --cursor          include mouse cursor
   -d DELAY, --delay DELAY
                         set delay before screenshot
+  -o FILE, --output FILE
+                        output file to save screenshot
   --backend {gnome-screenshot,scrot,spectacle}
                         select backend for action, overrides in-file variable
   --debug               don't use this option
 ```
 
+## Useful tip
+
+`-o/--output` option supports Python [time.strftime()](http://strftime.org/), for example `--output "screenshot-%Y.%m.%d-%H:%M:%S.png"` will produce `screenshot-2018.04.08-21:48:58.png`.
+
 ## Available backends
 
 - gnome-screenshot (**recommended**)
-- spectacle (package `kde-spectacle`)
+- spectacle (kde-spectacle)
 - scrot
 
 ## Installation
@@ -37,9 +43,9 @@ optional arguments:
 
 `<backend>` is one of the available backends
 
-```sh
-sudo apt install git python3 xclip <backend>
-```
+Ubuntu: `sudo apt install git python3 xclip <backend>`
+
+Arch Linux: `sudo pacman -S git python xclip <backend>`
 
 ### Clone repo
 

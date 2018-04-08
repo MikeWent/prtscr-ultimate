@@ -8,7 +8,7 @@
     Available backends:
     - gnome-screenshot (recommended)
     - scrot
-    - spectacle (package `kde-spectacle`)
+    - spectacle (kde-spectacle)
 
     Unsupported backends:
     - xfce4-screenshooter
@@ -17,12 +17,14 @@
 '''
 BACKEND='gnome-screenshot'
 
+from os.path import expanduser
 from random import choice
 from time import sleep
 from os import remove, path
 import subprocess
 import argparse
 import string
+import time
 
 '''
     Args parser
@@ -35,6 +37,7 @@ group_global.add_argument("-w", "--window", help="grab only active window", acti
 parser.add_argument("-b", "--borders", help="include window borders, works only with --window", action="store_true")
 parser.add_argument("-c", "--cursor", help="include mouse cursor", action="store_true")
 parser.add_argument("-d", "--delay", help="set delay before screenshot", type=int, default=0)
+parser.add_argument("-o", "--output", help="output file to save screenshot", type=str, default=False, metavar="FILE")
 parser.add_argument("--backend", help="select backend for action, overrides in-file variable", type=str, choices=['gnome-screenshot', 'scrot', 'spectacle'], default=BACKEND)
 parser.add_argument("--debug", help="don't use this option", action="store_true", default=False)
 options = parser.parse_args()
@@ -51,6 +54,10 @@ def rm(filename):
         remove(filename)
     except FileNotFoundError:
         pass
+
+def debug(something_to_print):
+    if options.debug:
+        print(str(something_to_print))
 
 '''
     Gnome Screenshot backend
@@ -74,7 +81,7 @@ if options.backend == 'gnome-screenshot':
     Scrot backend
 '''
 if options.backend == 'scrot':
-    command = ['scrot', '--silent', '--quality 100']
+    command = ['scrot', '--silent']
     if options.cursor:
         command.append('--include-pointer')
     if options.selection:
@@ -116,11 +123,18 @@ if options.delay > 0:
 '''
     Use backend with prepared params
 '''
-temp_filename = random_symbols() + '.png'
-command.append(temp_filename)
+if not options.output:
+    output_filename = random_symbols() + '.png'
+else:
+    output_filename = options.output
+    output_filename = time.strftime(options.output)
+    # fix gnome-screenshot bug
+    if output_filename[0] != "/":
+        # save file to homedir
+        output_filename = expanduser("~/") + output_filename
 
-if options.debug:
-    print('Debug:', command)
+command.append(output_filename)
+debug(command)
 
 if options.debug:
     # don't mute output,
@@ -147,27 +161,27 @@ else:
     Copy file to clipboard
 '''
 # check if exists
-if not path.exists(temp_filename):
-    print('No screenshot taken.')
+if not path.exists(output_filename):
+    print('No screenshot taken. Try running with --debug')
     exit(1)
 
-xclip_command = ['xclip', '-selection', 'clipboard', '-t', 'image/png', '-i', temp_filename]
-if options.debug:
-    print('Debug:', xclip_command)
+xclip_command = ['xclip', '-selection', 'clipboard', '-t', 'image/png', '-i', output_filename]
+debug(xclip_command)
 
 try:
     subprocess.run(xclip_command)
 except FileNotFoundError:
     print('Unable to copy screenshot to clipboard: "xclip" is not installed.')
-    yn = input('Delete temporary screenshot file? [Y/n]: ')
-    if not yn in ('', 'y'):
-        print('File name is', temp_filename)
-        exit()
-        
+    if not options.output:
+        yn = input('Delete temporary screenshot file? [Y/n]: ')
+        if not yn in ('', 'y'):
+            print('File name is', output_filename)
+            exit()
+
 '''
-    Remove temp file
+    Remove temp file if -o/--output isn't set
 '''
-rm_command = ['rm', temp_filename]
-subprocess.run(rm_command)
-if options.debug:
-    print('Debug:', rm_command)
+if not options.output:
+    rm_command = ['rm', output_filename]
+    subprocess.run(rm_command)
+    debug(rm_command)
