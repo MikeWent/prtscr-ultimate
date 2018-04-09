@@ -115,7 +115,6 @@ if options.backend == 'gnome-screenshot':
         command.append('--remove-border')
     if options.window:
         command.append('--window')
-    
     command.append('-f')
 
 '''
@@ -147,7 +146,6 @@ if options.backend == 'spectacle':
         command.append('--activewindow')
     if not options.window and not options.selection:
         command.append('--fullscreen')
-    
     command.append('--output')
 
 '''
@@ -167,7 +165,6 @@ if options.delay > 0:
 if not options.output:
     output_filename = "/tmp/" + random_symbols() + '.png'
 else:
-    output_filename = options.output
     output_filename = time.strftime(options.output)
     # fix gnome-screenshot bug
     if output_filename[0] != "/":
