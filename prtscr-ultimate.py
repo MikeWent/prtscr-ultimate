@@ -13,14 +13,26 @@
     Unsupported backends:
     - xfce4-screenshooter
 
-    Can be overrided with --backend option
+    Can be overridden with --backend option
 '''
 BACKEND='gnome-screenshot'
+
+'''
+    Supported editors:
+    - PhotoFlare
+    - gimp
+    - imeditor
+
+    Theoretically, here can be placed any editor which works with
+    `editorname /path/to/file` command syntax
+'''
+EDITOR='PhotoFlare'
+
 
 from os.path import expanduser
 from random import choice
 from time import sleep
-from os import remove, path
+from os import remove, path, stat
 import subprocess
 import argparse
 import string
@@ -36,8 +48,9 @@ group_global.add_argument("-f", "--fullscreen", help="grab the entire screen", a
 group_global.add_argument("-w", "--window", help="grab only active window", action="store_true")
 parser.add_argument("-b", "--borders", help="include window borders, works only with --window", action="store_true")
 parser.add_argument("-c", "--cursor", help="include mouse cursor", action="store_true")
-parser.add_argument("-d", "--delay", help="set delay before screenshot", type=int, default=0)
+parser.add_argument("-d", "--delay", help="set delay before taking a screenshot", type=int, default=0)
 parser.add_argument("-o", "--output", help="output file to save screenshot", type=str, default=False, metavar="FILE")
+parser.add_argument("-e", "--edit", help="open image editor after taking a screenshot", action="store_true")
 parser.add_argument("--backend", help="select backend for action, overrides in-file variable", type=str, choices=['gnome-screenshot', 'scrot', 'spectacle'], default=BACKEND)
 parser.add_argument("--debug", help="don't use this option", action="store_true", default=False)
 options = parser.parse_args()
@@ -58,6 +71,34 @@ def rm(filename):
 def debug(something_to_print):
     if options.debug:
         print(str(something_to_print))
+
+def copy_png_to_clipboard(filepath):
+    xclip_command = ['xclip', '-selection', 'clipboard', '-t', 'image/png', '-i', output_filename]
+    debug(xclip_command)
+    try:
+        subprocess.run(xclip_command)
+    except FileNotFoundError:
+        print('Unable to copy screenshot to clipboard: "xclip" is not installed.')
+        if not options.output:
+            yn = input('Delete temporary screenshot file? ('+output_filename+') [Y/n]: ')
+            if yn in ('', 'y', 'Y'):
+                rm(output_filename)
+            else:
+                exit()
+
+class FileWatchdog(object):
+    def __init__(self, path_to_file):
+        self.path_to_file = path_to_file
+        self.cached_stamp = stat(self.path_to_file).st_mtime
+
+    def file_changed(self):
+        stamp = stat(self.path_to_file).st_mtime
+        if stamp != self.cached_stamp:
+            # file changed
+            self.cached_stamp = stamp
+            return True
+        else:
+            return False
 
 '''
     Gnome Screenshot backend
@@ -124,7 +165,7 @@ if options.delay > 0:
     Use backend with prepared params
 '''
 if not options.output:
-    output_filename = random_symbols() + '.png'
+    output_filename = "/tmp/" + random_symbols() + '.png'
 else:
     output_filename = options.output
     output_filename = time.strftime(options.output)
@@ -164,19 +205,25 @@ else:
 if not path.exists(output_filename):
     print('No screenshot taken. Try running with --debug')
     exit(1)
+copy_png_to_clipboard(output_filename)
 
-xclip_command = ['xclip', '-selection', 'clipboard', '-t', 'image/png', '-i', output_filename]
-debug(xclip_command)
-
-try:
-    subprocess.run(xclip_command)
-except FileNotFoundError:
-    print('Unable to copy screenshot to clipboard: "xclip" is not installed.')
-    if not options.output:
-        yn = input('Delete temporary screenshot file? [Y/n]: ')
-        if not yn in ('', 'y'):
-            print('File name is', output_filename)
-            exit()
+'''
+    Open image editor if set
+'''
+if options.edit:
+    editor_command = [EDITOR, output_filename]
+    debug(editor_command)
+    if options.debug:
+        editor_process = subprocess.Popen(editor_command)
+    else:
+        # mute output and run
+        editor_process = subprocess.Popen(editor_command, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    screenshot_file = FileWatchdog(output_filename)
+    # while editor is alive
+    while editor_process.poll() == None:
+        if screenshot_file.file_changed() == True:
+            copy_png_to_clipboard(output_filename)
+        time.sleep(0.2)
 
 '''
     Remove temp file if -o/--output isn't set

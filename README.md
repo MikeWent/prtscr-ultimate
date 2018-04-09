@@ -2,13 +2,13 @@
 
 Lightweight python script that provides single command line interface for different screenshot tools.
 
-It makes screenshot, copies it to clipboard and deletes temporary screenshot file (optionally can save screenshot to file). Works everywhere, with any DE and even without it (for example with i3).
+It makes a screenshot, copies it to clipboard and deletes temporary screenshot file (optionally can save screenshot to file). Screenshot can be edited "in place" via any supported picture editor (and unsupported too, see below). Works everywhere, with any DE and even without it (for example with i3).
 
 ## Usage
 
 ```
 usage: prtscr-ultimate.py [-h] [-s | -f | -w] [-b] [-c] [-d DELAY] [-o FILE]
-                          [--backend {gnome-screenshot,scrot,spectacle}]
+                          [-e] [--backend {gnome-screenshot,scrot,spectacle}]
                           [--debug]
 
 optional arguments:
@@ -19,9 +19,10 @@ optional arguments:
   -b, --borders         include window borders, works only with --window
   -c, --cursor          include mouse cursor
   -d DELAY, --delay DELAY
-                        set delay before screenshot
+                        set delay before taking a screenshot
   -o FILE, --output FILE
                         output file to save screenshot
+  -e, --edit            open image editor after taking a screenshot
   --backend {gnome-screenshot,scrot,spectacle}
                         select backend for action, overrides in-file variable
   --debug               don't use this option
@@ -39,6 +40,10 @@ optional arguments:
 - spectacle (kde-spectacle)
 - scrot
 
+### Unsupported backends
+
+- xfce4-screenshooter
+
 ### Install software
 
 `<backend>` is one of the available backends
@@ -54,13 +59,9 @@ git clone git@github.com:MikeWent/prtscr-ultimate.git
 cd prtscr-ultimate
 ```
 
-### Edit backend
+### Set backend
 
-```sh
-nano ./prtscr-ultimate.py
-```
-
-Find var `BACKEND` and set your installed backend
+Open `prtscr-ultimate.py` in text editor, find var `BACKEND` and set your installed backend
 
 Example:
 
@@ -68,9 +69,20 @@ Example:
 BACKEND='gnome-screenshot'
 ```
 
-## Unsupported backends
+### Set editor (optionally)
 
-- xfce4-screenshooter
+See inctruction above
+
+```python3
+EDITOR='PhotoFlare'
+```
+
+#### Supported editors
+
+- PhotoFlare
+- gimp
+- imeditor
+- any editor with command line syntax `editorname /path/to/file`
 
 ## License
 
