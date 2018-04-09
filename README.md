@@ -27,17 +27,17 @@ optional arguments:
   --debug               don't use this option
 ```
 
-## Useful tip
+### Useful tip
 
-`-o/--output` option supports Python [time.strftime()](http://strftime.org/), for example `--output "screenshot-%Y.%m.%d-%H:%M:%S.png"` will produce `screenshot-2018.04.08-21:48:58.png`.
+`-o/--output` option supports Python [time.strftime](http://strftime.org/), for example `--output "screenshot-%Y.%m.%d-%H:%M:%S.png"` will produce `screenshot-2018.04.08-21:48:58.png`.
 
-## Available backends
+## Installation
+
+### Available backends
 
 - gnome-screenshot (**recommended**)
 - spectacle (kde-spectacle)
 - scrot
-
-## Installation
 
 ### Install software
 
