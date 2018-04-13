@@ -79,7 +79,7 @@ EDITOR='pinta'
 
 #### Supported editors
 
-Common name and [`command`].
+Common name and (`command`).
 
 - Pinta (`pinta`): powerful and has an intuitive UI. Would recommend.
 - Krita (`krita`): this one is more about drawing like a pro, but does screenshot editing well too.
