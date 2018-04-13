@@ -74,14 +74,18 @@ BACKEND='gnome-screenshot'
 See inctruction above
 
 ```python3
-EDITOR='PhotoFlare'
+EDITOR='pinta'
 ```
 
 #### Supported editors
 
-- PhotoFlare
-- gimp
-- imeditor
+Common name and [`command`].
+
+- Pinta (`pinta`): powerful and has an intuitive UI. Would recommend.
+- Krita (`krita`): this one is more about drawing like a pro, but does screenshot editing well too.
+- PhotoFlare (`PhotoFlare`): fast but has a bit non-intuitive UI.
+- GIMP (`gimp`): no need to introduce. Powerful and old-known. Has a bit non-intuitive UI, even more than PhotoFlare. Also you need to "Export" pic, _not_ "Save" it to get autocopy working. Wouldn't recommend for fast editing. Choose another option if you can.
+- Imeditor (`imeditor`): seems lightweight, but last time I used it was a piece of crap. Wouldn't recommend.
 - any editor with command line syntax `editorname /path/to/file`
 
 ## License

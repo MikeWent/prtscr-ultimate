@@ -3,31 +3,8 @@
 # PrtScr Ultimate
 # https://github.com/MikeWent/prtscr-ultimate
 
-
-'''
-    Available backends:
-    - gnome-screenshot (recommended)
-    - scrot
-    - spectacle (kde-spectacle)
-
-    Unsupported backends:
-    - xfce4-screenshooter
-
-    Can be overridden with --backend option
-'''
 BACKEND='gnome-screenshot'
-
-'''
-    Supported editors:
-    - PhotoFlare
-    - gimp
-    - imeditor
-
-    Theoretically, here can be placed any editor which works with
-    `editorname /path/to/file` command syntax
-'''
-EDITOR='PhotoFlare'
-
+EDITOR='pinta'
 
 from os.path import expanduser
 from random import choice
